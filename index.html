@@ -1,0 +1,23 @@
+<html>
+	<head>
+		<title>EddieTimes</title>
+		<script src="https://code.angularjs.org/1.5.5/angular.min.js"></script>
+		<script src="app.js"></script>
+	</head>
+	<body ng-app="eddieTimes" ng-controller="mainController">
+		<div>
+			{{test}}
+			
+			<div ng-repeat="post in posts | orderBy: '-upvote'">
+				{{ post.title }} - upvotes: {{post.upvote}}<button ng-click="incrementUpvote(post)">^</button>
+			</div>
+			
+			<form ng-submit="addPost()">
+				<input type="text" ng-model="title"/>
+				<button type="submit" >Add</button>
+			</form>
+
+		</div>
+	</body>
+</html>
+
