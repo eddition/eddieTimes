@@ -9,7 +9,7 @@ eddieTimesApp.config([
 
 		$stateProvider.state('home', {
 			url: '/home',
-			templateUrl: '/home.html',
+			templateUrl: 'pages/home.html',
 			controller: 'mainController'
 		});
 
