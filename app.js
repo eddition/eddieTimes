@@ -11,7 +11,12 @@ eddieTimesApp.config([
 			url: '/home',
 			templateUrl: 'pages/home.html',
 			controller: 'mainController'
-		});
+		})
+		.state('post', {
+			url:'/post/{id}',
+			templateUrl:'pages/post.html',
+			controller: 'postController'
+		})
 
 		$urlRouterProvider.otherwise('home');
 
@@ -27,16 +32,6 @@ eddieTimesApp.controller('mainController', [
 	$scope.test='Eddie Times';
 
 	$scope.posts = postsFactory.posts;
-
-	[
-		{title: 'post 1', upvote: 3}
-		, {title: 'post 2', upvote: 8}
-		, {title: 'post 3', upvote: 9}
-		, {title: 'post 4', upvote: 10}
-		, {title: 'post 5', upvote: 2}
-	];
-
-	//FUNCTIONS
 	
 	//Add Post
 	$scope.addPost = function(){
@@ -46,9 +41,10 @@ eddieTimesApp.controller('mainController', [
 		}
 
 		$scope.posts.push({
-			title: $scope.title
-			, link: $scope.link
-			, upvote: 0
+			title: $scope.title ,
+			link: $scope.link ,
+			upvote: 0 ,
+			comments: [] 			]
 		});
 		
 		$scope.title = '';
@@ -61,6 +57,31 @@ eddieTimesApp.controller('mainController', [
 	};
 
 }]);
+
+eddieTimesApp.controller('postController', [
+	'$scope',
+	'$stateParams',
+	'postsFactory',
+	 function($scope, $stateParams, postsFactory){
+
+	 	$scope.post = postsFactory.posts[$stateParams.id];
+
+	 	$scope.addComment = function(){
+	 		if($scope.body === ''){return;}
+
+	 		$scope.post.comments.push({
+	 			body: $scope.body,
+	 			author: 'user',
+	 			upvote: 0
+	 		});
+
+	 		$scope.body = '';
+	 	}
+
+	}
+]);
+
+//FACTORIES
 
 eddieTimesApp.factory('postsFactory',[function(){
 	var postsObj = {
