@@ -1,23 +1,57 @@
 <html>
 	<head>
 		<title>EddieTimes</title>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
 		<script src="https://code.angularjs.org/1.5.5/angular.min.js"></script>
+		    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.min.js"></script>
+
 		<script src="app.js"></script>
 	</head>
 	<body ng-app="eddieTimes" ng-controller="mainController">
-		<div>
-			{{test}}
+		
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<ui-view><ui-view>
+				<div class="page-header">
+					<h1>Eddie Times</h1>
+				</div>
 			
-			<div ng-repeat="post in posts | orderBy: '-upvote'">
-				{{ post.title }} - upvotes: {{post.upvote}}<button ng-click="incrementUpvote(post)">^</button>
-			</div>
-			
-			<form ng-submit="addPost()">
-				<input type="text" ng-model="title"/>
-				<button type="submit" >Add</button>
-			</form>
+				<div ng-repeat="post in posts | orderBy:'-upvote'">
+				   <span class="glyphicon glyphicon-thumbs-up"
+				     ng-click="incrementUpvote(post)"></span>
+				    {{post.upvote}}
+				   <span style="font-size:20px; margin-left:10px;">
+				     <a ng-show="post.link" href="{{post.link}}">
+				       {{post.title}}
+				     </a>
+				     <span ng-hide="post.link">
+				       {{post.title}}
+				     </span>
+				   </span>
+				 </div>
+					
+			     <form ng-submit="addPost()" style="margin-top:30px;">
+			       <h3>Add a new post</h3>
 
+			       <div class="form-group">
+			         <input type="text"
+			           class="form-control"
+			           placeholder="Title"
+			           ng-model="title"></input>
+			       </div>
+			       <div class="form-group">
+			         <input type="text"
+			         class="form-control"
+			         placeholder="Link"
+			         ng-model="link"></input>
+			       </div>
+			       <button type="submit" class="btn btn-primary">Post</button>
+			     </form>
+
+			</div>
 		</div>
+
 	</body>
 </html>
 
