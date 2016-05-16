@@ -1,32 +1,39 @@
 //MODULE
-var eddieTimesApp = angular.module('eddieTimes', ['ui.router']);
+var eddieTimesApp = angular.module('eddieTimesApp', ['ngRoute', 'ngResource']);
+
 
 //ROUTER CONFIG
-eddieTimesApp.config([
-	'$stateProvider', 
-	'$urlRouterProvider', 
-	function($stateProvider, $urlRouterProvider){
-
-		$stateProvider.state('home', {
-			url: '/home',
-			templateUrl: 'pages/home.html',
-			controller: 'mainController'
-		})
-		.state('post', {
-			url:'/post/{id}',
-			templateUrl:'pages/post.html',
-			controller: 'postController'
-		})
-
-		$urlRouterProvider.otherwise('home');
-
-	}
-]);
+eddieTimesApp.config(function ($routeProvider) {
+   
+    $routeProvider
+    
+    .when('/', {
+        templateUrl: '/pages/home.htm',
+        controller: 'mainController',
+        resolve: {
+        	postPromise: function(postsFactory){
+        		console.log('fetching...');
+        		
+        		return postsFactory.getItems();
+        	}
+        }
+    })
+    
+    .when('/posts/:id', {
+        templateUrl: '/pages/post.htm',
+        controller: 'postController'
+    })
+    
+    .otherwise({
+    	respondTo: '/'
+    })
+    
+});
 
 //CONTROLLER
 eddieTimesApp.controller('mainController', [
 	 '$scope',
-	 'postsFactory' ,
+	 'postsFactory',
 	function($scope, postsFactory){
 
 	$scope.test='Eddie Times';
@@ -40,15 +47,21 @@ eddieTimesApp.controller('mainController', [
 			return ;
 		}
 
-		$scope.posts.push({
-			title: $scope.title ,
-			link: $scope.link ,
-			upvote: 0 ,
-			comments: [] 			]
-		});
+	$scope.posts.push({
+		title: $scope.title,
+		link: $scope.link,
+		upvote: 0
+	})
 		
 		$scope.title = '';
 		$scope.link = '';
+	};
+
+	//Load posts
+	$scope.loadPosts = function(){
+		$scope.$apply(function(){
+			postsFactory.getItems();
+		})
 	};
 
 	//Vote Up
@@ -63,7 +76,7 @@ eddieTimesApp.controller('postController', [
 	'$stateParams',
 	'postsFactory',
 	 function($scope, $stateParams, postsFactory){
-
+	 	debugger;
 	 	$scope.post = postsFactory.posts[$stateParams.id];
 
 	 	$scope.addComment = function(){
@@ -83,9 +96,20 @@ eddieTimesApp.controller('postController', [
 
 //FACTORIES
 
-eddieTimesApp.factory('postsFactory',[function(){
+eddieTimesApp.factory('postsFactory', ['$http', function($http){
 	var postsObj = {
 		posts: []
+	};
+
+	postsObj.getItems = function(){
+		$http({
+			method: 'GET',
+			url: 'http://localhost:3000/posts'
+		}).success(function(data, status){
+			angular.copy(data.posts, postsObj.posts)
+		}).error(function(data, status){
+			console.log(data, status);
+		})
 	}
 
 	return postsObj;
