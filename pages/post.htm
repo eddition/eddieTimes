@@ -1,13 +1,13 @@
 <div class="page-header">
 	<h3>
-		<a ng-show="post.link" href="{{ post.link }}">
-			{{ post.title }}
-		</a>
-		<span ng-hide="post.link">
+		<span>
 			{{ post.title }}
 		</span>
 	</h3>
-	<a href="#/home">back</a>
+	<a href="#/">back</a>
+	<span>
+		{{ post.body }}
+	</span>
 </div>
 
 <form ng-submit="addComment()">
@@ -17,6 +17,7 @@
 	</div>
 	<button type='submit' class='btn btn-primary'>Post</button>
 </form>
+<button class='btn btn-primary' ng-click='test()'>click me</button>
 
 <div ng-repeat="comment in post.comments">
 	<span class="glyphicon glyphicon-thumbs-up" ng-click="incrementVote(comment)"></span>
@@ -25,3 +26,7 @@
 		{{comment.body}}
 	</span>
 </div>
+<script>
+	debugger;
+</script>
+hello
